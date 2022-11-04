@@ -1,0 +1,58 @@
+{
+    "name": "blomstra/gdpr",
+    "description": "Gives user more control over their data",
+    "keywords": [
+        "extension",
+        "flarum",
+        "blomstra",
+        "gdpr",
+        "export"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniël Klabbers",
+            "email": "daniel@klabbers.email",
+            "homepage": "https://luceos.com"
+        },
+        {
+            "name": "IanM",
+            "homepage": "https://discuss.flarum.org/u/ianm",
+            "role": "Developer"
+        },
+        {
+            "name": "Alexander Skvortsov",
+            "email": "askvortsov@flarum.org",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/blomstra/flarum-gdpr/issues",
+        "source": "https://github.com/blomstra/flarum-gdpr"
+    },
+    "require": {
+        "php": "8.*",
+        "flarum/core": "^1.0.0",
+        "nelexa/zip": "^4.0.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Blomstra\\Gdpr\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "GDPR",
+            "category": "feature",
+            "icon": {
+                "image": "resources/logo.svg",
+                "backgroundColor": "#EBF1FD",
+                "color": "#3a98d0",
+                "backgroundSize": "90%",
+                "backgroundRepeat": "no-repeat",
+                "backgroundPosition": "center"
+            }
+        }
+    }
+}
