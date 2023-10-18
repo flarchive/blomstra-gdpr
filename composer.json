@@ -1,0 +1,91 @@
+{
+    "name": "blomstra/gdpr",
+    "description": "Gives user more control over their data",
+    "keywords": [
+        "extension",
+        "flarum",
+        "blomstra",
+        "gdpr",
+        "export"
+    ],
+    "type": "flarum-extension",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Daniël Klabbers",
+            "email": "daniel@klabbers.email",
+            "homepage": "https://luceos.com"
+        },
+        {
+            "name": "IanM",
+            "email": "ian@flarum.org",
+            "role": "Developer"
+        },
+        {
+            "name": "Alexander Skvortsov",
+            "email": "askvortsov@flarum.org",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/blomstra/flarum-gdpr/issues",
+        "source": "https://github.com/blomstra/flarum-gdpr"
+    },
+    "require": {
+        "php": "8.*",
+        "flarum/core": "^1.8.0",
+        "nelexa/zip": "^4.0.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "Blomstra\\Gdpr\\": "src/"
+        }
+    },
+    "extra": {
+        "flarum-extension": {
+            "title": "GDPR",
+            "category": "feature",
+            "icon": {
+                "image": "resources/logo.svg",
+                "backgroundColor": "#EBF1FD",
+                "color": "#3a98d0",
+                "backgroundSize": "90%",
+                "backgroundRepeat": "no-repeat",
+                "backgroundPosition": "center"
+            }
+        },
+        "flarum-cli": {
+            "modules": {
+                "githubActions": true,
+                "typescript": true,
+                "backendTesting": true,
+                "jsCommon": true
+            }
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Blomstra\\Gdpr\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": [
+            "@test:unit",
+            "@test:integration"
+        ],
+        "test:unit": "phpunit -c tests/phpunit.unit.xml",
+        "test:integration": "phpunit -c tests/phpunit.integration.xml",
+        "test:setup": "@php tests/integration/setup.php"
+    },
+    "scripts-descriptions": {
+        "test": "Runs all tests.",
+        "test:unit": "Runs all unit tests.",
+        "test:integration": "Runs all integration tests.",
+        "test:setup": "Sets up a database for use with integration tests. Execute this only once."
+    },
+    "require-dev": {
+        "flarum/testing": "^1.0.0",
+        "flarum/nicknames": "^1.8",
+        "fof/user-bio": "^1.3"
+    }
+}
