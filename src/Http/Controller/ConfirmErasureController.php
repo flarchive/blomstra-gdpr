@@ -1,0 +1,60 @@
+<?php
+
+/*
+ * This file is part of Flarum.
+ *
+ * For detailed copyright and license information, please view the
+ * LICENSE file that was distributed with this source code.
+ */
+
+namespace Flarum\Gdpr\Http\Controller;
+
+use Carbon\Carbon;
+use Flarum\Foundation\ValidationException;
+use Flarum\Gdpr\Models\ErasureRequest;
+use Flarum\Http\RequestUtil;
+use Flarum\Http\SessionAuthenticator;
+use Flarum\Http\UrlGenerator;
+use Illuminate\Support\Arr;
+use Laminas\Diactoros\Response\RedirectResponse;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\RequestHandlerInterface;
+
+class ConfirmErasureController implements RequestHandlerInterface
+{
+    public function __construct(protected UrlGenerator $url, protected SessionAuthenticator $authenticator)
+    {
+    }
+
+    public function handle(Request $request): ResponseInterface
+    {
+        $actor = RequestUtil::getActor($request);
+        $token = Arr::get($request->getQueryParams(), 'token');
+
+        /** @var ErasureRequest $erasureRequest */
+        $erasureRequest = ErasureRequest::query()
+            ->with('user')
+            ->where('verification_token', $token)
+            ->firstOrFail();
+
+        if ($erasureRequest->user->isNot($actor) && !$actor->isGuest()) {
+            throw new ValidationException(['user' => 'Erase requests cannot be confirmed by different users.']);
+        }
+
+        if (in_array($erasureRequest->status, [ErasureRequest::STATUS_PROCESSED, ErasureRequest::STATUS_MANUAL])) {
+            throw new ValidationException(['request' => 'This erasure request has already been processed.']);
+        }
+
+        $ip = $request->getAttribute('ipAddress');
+
+        $erasureRequest->user_confirmed_at = Carbon::now();
+        $erasureRequest->status = ErasureRequest::STATUS_USER_CONFIRMED;
+        $erasureRequest->cancelled_at = null;
+        $erasureRequest->verification_token = null;
+        $erasureRequest->confirmation_ip = $ip;
+        $erasureRequest->save();
+
+        return new RedirectResponse($this->url->to('forum')->base().'?erasureRequestConfirmed=1');
+    }
+}
